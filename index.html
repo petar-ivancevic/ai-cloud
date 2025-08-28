@@ -1,0 +1,84 @@
+<!-- Project: AI Feelings (static, multi‑file) -->
+
+<!--
+Save these as separate files with the exact names/paths:
+
+/ (root)
+  index.html
+  cloud.html
+  styles.css
+  /js
+    app.js
+    bubbles.js
+    cloud.js
+
+Open index.html locally or host the folder on GitHub Pages/Netlify.
+-->
+
+<!-- =============================
+= index.html
+============================== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>How do you feel about AI?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Poppins:wght@700&display=swap" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet" />
+</head>
+<body>
+  <div id="bg"></div>
+  <div id="pill-layer" aria-hidden="true"></div>
+  <main class="center">
+    <section class="card" id="prompt-card" aria-labelledby="h1">
+      <h1 id="h1" class="display">How do you feel<br/>about AI?</h1>
+      <p class="muted">Share your thoughts in one word, or click a floating emotion to submit directly.</p>
+      <form id="feeling-form" autocomplete="off" novalidate>
+        <label class="sr-only" for="feeling-input">Enter your feeling (one word)</label>
+        <input id="feeling-input" name="feeling" type="text" inputmode="text" placeholder="Enter your feeling…" maxlength="24" required />
+        <button id="submit-btn" type="submit" class="primary">Submit Your Feeling</button>
+        <p id="helper" class="helper" aria-live="polite"></p>
+      </form>
+      <div class="tiny-actions">
+        <button type="button" id="view-cloud" class="ghost">Go to Word Cloud</button>
+        <button type="button" id="reset-session" class="ghost danger">Reset Session</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script src="js/bubbles.js"></script>
+  <script>
+    const input = document.getElementById('feeling-input');
+    const form = document.getElementById('feeling-form');
+    const helper = document.getElementById('helper');
+    const submitBtn = document.getElementById('submit-btn');
+    let lastSubmit = 0;
+
+    function handleSubmitWord(word){
+      const now = Date.now();
+      if (now - lastSubmit < 800) { helper.textContent = 'Give it a sec…'; return; }
+      const norm = normalizeWord(word);
+      if (!norm) { helper.textContent = 'Please enter one clean word (letters only).'; return; }
+      if (!isAllowed(norm)) { helper.textContent = 'That word is not allowed.'; return; }
+      incrementWord(norm);
+      lastSubmit = now;
+      submitBtn.classList.add('success'); setTimeout(()=>submitBtn.classList.remove('success'), 500);
+      window.location.href = 'cloud.html';
+    }
+
+    form.addEventListener('submit', (e)=>{ e.preventDefault(); handleSubmitWord(input.value); });
+    document.getElementById('view-cloud').addEventListener('click', ()=> window.location.href='cloud.html');
+    document.getElementById('reset-session').addEventListener('click', ()=>{ if(confirm('Reset all submissions on this device?')) { setCounts({}); helper.textContent='Session reset.'; }});
+
+    startPills({
+      container: document.getElementById('pill-layer'),
+      obstacleEl: document.getElementById('prompt-card'),
+      onPick: (w)=>{ input.value = w; handleSubmitWord(w); }
+    });
+  </script>
+</body>
+</html>

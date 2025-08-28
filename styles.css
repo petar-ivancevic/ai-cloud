@@ -1,0 +1,97 @@
+:root{
+  --bg: #000000;                /* true black */
+  --panel: rgba(16,18,24,.92);  /* dark glass card */
+  --ring: #7c3aed;
+  --text: #eef0f5;
+  --muted: #9aa2b1;
+  --shadow: rgba(0,0,0,.55);
+}
+
+/* Base layout */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,sans-serif;
+  color:var(--text);
+  background:#000;                          /* <- black */
+  overflow:hidden;
+}
+.display{
+  font-family:Poppins,Inter,system-ui,sans-serif;
+  font-weight:700;
+  font-size:clamp(2.2rem,4vw,3.2rem);
+  line-height:1.1; margin:0 0 .5rem;
+}
+.center{position:relative;display:grid;place-items:center;height:100vh;padding:24px}
+.center.narrow{padding:16px}
+.card{
+  position:relative; z-index:2;             /* card above pill layer */
+  max-width:960px; width:min(92vw,900px);
+  background:var(--panel);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 12px 32px var(--shadow);
+  backdrop-filter:blur(8px);
+  border-radius:20px; padding:28px 28px 18px;
+}
+.muted{color:var(--muted)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+form{display:grid;gap:12px;margin-top:14px}
+input[type=text]{
+  width:100%;height:48px;border-radius:12px;border:1px solid transparent;
+  background:#121622;color:var(--text);padding:0 14px;font-size:16px;outline:none
+}
+input[type=text]:focus{border-color:var(--ring);box-shadow:0 0 0 3px rgba(124,58,237,.35)}
+button{
+  height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.1);
+  background:#191E2B;color:var(--text);padding:0 14px;font-weight:600;cursor:pointer
+}
+button:hover{filter:brightness(1.06)}
+button.primary{background:linear-gradient(135deg,#7c3aed,#a855f7);border:none}
+button.primary.success{box-shadow:0 0 0 8px rgba(34,197,94,.25) inset}
+button.ghost{background:transparent;border:1px solid rgba(255,255,255,.12)}
+button.danger{border-color:rgba(239,68,68,.5)}
+.helper{min-height:1.2em;margin:8px 2px 0}
+.tiny-actions{display:flex;gap:8px;margin-top:8px}
+.bar{display:flex;gap:8px;flex-wrap:wrap}
+.tiny{font-size:12px}
+
+/* Background layer: now inert so pills get the clicks */
+#bg{
+  position:absolute; inset:0;
+  background:#000;                 /* <- black */
+  pointer-events: none;            /* <- DO NOT capture clicks */
+}
+
+/* Word cloud box */
+.cloud{
+  position:relative; width:min(92vw,900px); height:62vh;
+  background:#0b0f16; border:1px dashed rgba(255,255,255,.1);
+  border-radius:16px; margin:12px auto; overflow:hidden
+}
+
+/* Pill layer (floating suggestions) */
+#pill-layer{
+  position:absolute; inset:0; overflow:hidden;
+  z-index:1;                       /* below card, above #bg */
+  pointer-events:auto;             /* must receive clicks */
+}
+
+/* Pill look — vivid colors like your mock */
+.pill{
+  position:absolute; display:inline-flex; align-items:center; justify-content:center;
+  padding:8px 16px; border-radius:999px; font-weight:700; letter-spacing:.2px;
+  box-shadow:0 12px 30px var(--shadow);
+  user-select:none; touch-action:none; will-change:transform; white-space:nowrap;
+  outline:none; border:1px solid rgba(255,255,255,.15); color:#fff;
+}
+.pill[data-sent="positive"]{ background:#16a34a; border-color:rgba(34,197,94,.75); }  /* green */
+.pill[data-sent="neutral"] { background:#3b82f6; border-color:rgba(96,165,250,.8);}  /* blue  */
+.pill[data-sent="negative"]{ background:#ef4444; border-color:rgba(248,113,113,.9);}  /* red   */
+
+.pill:focus{outline:3px solid rgba(255,255,255,.45)}
+.pill:hover{transform:translateZ(0) scale(1.03)}
+
+/* Reduced motion: remove floating layer entirely */
+@media (prefers-reduced-motion: reduce){ #pill-layer{display:none} }

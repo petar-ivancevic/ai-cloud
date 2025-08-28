@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Feelings — Word Cloud</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Poppins:wght@700&display=swap" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet" />
+</head>
+<body>
+  <div id="bg"></div>
+  <main class="center narrow">
+    <section class="card" aria-labelledby="h1">
+      <h1 id="h1" class="display">AI Word Cloud</h1>
+      <p class="muted">This cloud represents this session’s sentiment towards AI. Hover/tap a word to see counts.</p>
+
+      <div id="cloud" class="cloud" role="img" aria-label="Word cloud visualization"></div>
+
+      <div class="bar">
+        <button id="add-another" class="ghost">Add another</button>
+        <button id="share-link" class="primary">Share link</button>
+        <button id="download-png" class="ghost">Download PNG</button>
+        <button id="reset" class="ghost danger">Reset</button>
+      </div>
+
+      <p id="announce" class="helper" aria-live="polite"></p>
+      <p id="summary" class="tiny muted"></p>
+    </section>
+  </main>
+
+  <!-- Your shared utils & renderer -->
+  <script src="js/app.js"></script>
+  <script src="js/cloud.js"></script>
+  <script>
+    // Kick off cloud rendering
+    if (typeof bootCloud === 'function') {
+      bootCloud();
+    } else {
+      document.getElementById('cloud').innerHTML =
+        '<p class="muted" style="padding:12px">cloud.js not found or bootCloud() missing.</p>';
+    }
+  </script>
+</body>
+</html>
